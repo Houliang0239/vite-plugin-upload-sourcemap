@@ -1,7 +1,6 @@
-# vite-plugin-templates
-  > ## 这是一个写 vite 插件的通用模板
-  >
-  > ## 如果觉得项目模板不错的话，欢迎 Star 支持就好，感谢大家！
+# vite-plugin-upload-sourcemap
+> 一个vite插件用于上传sourcemap
+> 如果您的团队需要sourcemap反解析堆栈，则可以使用此插件
 
 
 本地引入时，windows不支持link，需要改为file

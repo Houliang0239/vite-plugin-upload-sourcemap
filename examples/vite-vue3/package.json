@@ -19,7 +19,7 @@
         "@vitejs/plugin-vue": "^2.2.0",
         "typescript": "^4.5.4",
         "vite": "file:../../node_modules/vite",
-        "vite-plugin-template": "file:../../",
+        "vite-plugin-upload-sourcemap": "file:../../",
         "vue-tsc": "^0.29.8"
     }
 }

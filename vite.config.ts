@@ -7,6 +7,9 @@ const config = {
     },
     rollupOptions: {
       input: 'src/index.ts',
+      output: {
+        sourcemap: true,
+      },
     },
   },
 };

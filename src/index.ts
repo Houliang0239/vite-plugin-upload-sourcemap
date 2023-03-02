@@ -3,7 +3,8 @@ const fetch = (...args: [string, object]) =>
   import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const fs = require('fs');
 const fsPromises = fs.promises;
-const { join } = require('path');
+const path = require('path');
+const { join } = path;
 const FormData = require('form-data');
 const archiver = require('archiver');
 export default function viteUploadSourceMap(payload): PluginOption {
@@ -73,16 +74,31 @@ export default function viteUploadSourceMap(payload): PluginOption {
         return await fsPromises.unlink(zipPath);
       }
     }
-    const details = (body && body.retdesc) || `${res.status} - ${res.statusText}`;
+    const details =
+      (body && body.retdesc) || `${res.status} - ${res.statusText}`;
     throw new Error(`${errMessage}: ${details}`);
   };
-
+  // const getAllFile = function (dir) {
+  //   const res: string[] = [];
+  //   function traverse(dir) {
+  //     fs.readdirSync(dir).forEach((file) => {
+  //       const pathname = join(dir, file);
+  //       if (fs.statSync(pathname).isDirectory()) {
+  //         traverse(pathname);
+  //       } else {
+  //         res.push(pathname);
+  //       }
+  //     });
+  //   }
+  //   traverse(dir);
+  //   return res;
+  // };
   return {
     // 插件名称
-    name: 'vite-upload-sourcemap',
+    name: 'vite-plugin-upload-sourcemap',
 
     // pre 会较于 post 先执行
-    enforce: 'pre', // post
+    enforce: 'post', // post
 
     // 指明它们仅在 'build' 或 'serve' 模式时调用
     apply: 'build', // apply 亦可以是一个函数
@@ -93,19 +109,24 @@ export default function viteUploadSourceMap(payload): PluginOption {
         throw new Error('vite config: build.sourcemap must be true');
       }
     },
-
     // 输出阶段钩子通用钩子：在调用 bundle.write后，所有的chunk都写入文件后，最后会调用一次 writeBundle
-    async writeBundle(options, bundle) {
-      const sourceFile = Object.keys(bundle).filter((file) =>
-        /\.js\.map$/.test(file),
-      );
+    async writeBundle(options) {
       const _dirPath = options.dir;
-      if (sourceFile.length > 0 && _dirPath) {
-        const zipPath = await zipSourceMaps(_dirPath, sourceFile);
-        await uploadSourceMapZip(zipPath);
-      } else {
-        throw new Error('未查询到sourcemap文件或输入路径异常');
-      }
+      fs.readdir(_dirPath + '/assets', async (err, files) => {
+        if (err) {
+          throw err;
+        }
+        const sourceFile = files
+          .filter((file) => /\.js\.map$/.test(file))
+          .map((file) => `/assets/${file}`);
+        console.log(sourceFile);
+        if (sourceFile.length > 0 && _dirPath) {
+          const zipPath = await zipSourceMaps(_dirPath, sourceFile);
+          await uploadSourceMapZip(zipPath);
+        } else {
+          throw new Error('未查询到sourcemap文件或输入路径异常');
+        }
+      });
     },
   };
 }

@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import template from 'vite-plugin-template';
+import viteUploadSourceMap from 'vite-plugin-upload-sourcemap';
 import * as path from 'path';
 
 // https://vitejs.dev/config/
@@ -15,9 +15,9 @@ export default defineConfig({
   },
   plugins: [
     vue(),
-    template({
-      appCode: 'c3980120-66eb-11ed-8e73-dfe2d99736d6',
-      appVersion: 'v0.2',
+    viteUploadSourceMap({
+      appCode: '262477e0-b734-11ed-8201-353d4ba229b3',
+      appVersion: 'v0.0.2',
       uploadUrl:
         'https://prism-test.ybaobx.com/api/project/uploadSourceMapFiles',
       removeSourceMap: true,
